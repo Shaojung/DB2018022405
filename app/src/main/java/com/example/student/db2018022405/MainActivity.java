@@ -3,6 +3,8 @@ package com.example.student.db2018022405;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -24,10 +26,13 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class MainActivity extends AppCompatActivity {
     MyDataHandler dataHandler;
+    ListView lv;
+    ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dataHandler = new MyDataHandler();
         new Thread(){
             @Override
             public void run() {
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String data = sb.toString();
                 Log.d("NET", data);
-                dataHandler = new MyDataHandler();
+
                 SAXParserFactory spf = SAXParserFactory.newInstance();
                 SAXParser sp = null;
                 try {
@@ -66,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     XMLReader xr = sp.getXMLReader();
                     xr.setContentHandler(dataHandler);
                     xr.parse(new InputSource(new StringReader(data)));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (SAXException e) {
@@ -76,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
+
+        lv = findViewById(R.id.listView);
+        adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, dataHandler.titles);
+        lv.setAdapter(adapter);
 
 
     }
