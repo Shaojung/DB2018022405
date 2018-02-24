@@ -6,18 +6,23 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.ArrayList;
+
 /**
  * Created by student on 2018/2/24.
  */
 
 public class MyDataHandler extends DefaultHandler {
     boolean isTitle = false;
+    StringBuilder sb;
+    public ArrayList<String> titles = new ArrayList();
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         if (qName.equals("title"))
         {
             isTitle = true;
+            sb = new StringBuilder();
         }
     }
 
@@ -27,6 +32,8 @@ public class MyDataHandler extends DefaultHandler {
         if (qName.equals("title"))
         {
             isTitle = false;
+            Log.d("NET", sb.toString());
+            titles.add(sb.toString());
         }
     }
 
@@ -35,7 +42,8 @@ public class MyDataHandler extends DefaultHandler {
         super.characters(ch, start, length);
         if (isTitle)
         {
-            Log.d("NET", new String(ch, start, length));
+            // Log.d("NET", new String(ch, start, length));
+            sb.append(new String(ch, start, length));
         }
 
     }

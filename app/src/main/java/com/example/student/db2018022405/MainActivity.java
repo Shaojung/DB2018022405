@@ -23,7 +23,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 public class MainActivity extends AppCompatActivity {
-
+    MyDataHandler dataHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String data = sb.toString();
                 Log.d("NET", data);
-                final MyDataHandler dataHandler = new MyDataHandler();
+                dataHandler = new MyDataHandler();
                 SAXParserFactory spf = SAXParserFactory.newInstance();
                 SAXParser sp = null;
                 try {
@@ -76,5 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
+
+
     }
 }
